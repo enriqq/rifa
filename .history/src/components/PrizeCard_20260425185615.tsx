@@ -49,7 +49,7 @@ export default function PrizeCard({ tier, name, description, imageUrl, ticketPri
         <div className="flex items-center gap-1.5">
           <Wine size={16} style={{ color: GOLD }} />
           <span className="text-sm font-semibold" style={{ color: GOLD }}>
-            ${ticketPrice.toLocaleString()} MXN
+            ${ticketPrice.toLocaleString()} CLP
           </span>
           <span className="text-gray-500 text-xs">/ boleto</span>
         </div>

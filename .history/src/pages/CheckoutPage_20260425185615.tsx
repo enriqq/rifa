@@ -155,7 +155,7 @@ export default function CheckoutPage() {
               <div className="flex gap-3 justify-center">
                 <button onClick={() => navigate('/dashboard')} className="px-6 py-3 rounded-xl font-semibold text-sm"
                   style={{ background: GOLD, color: '#101010' }}>Ver Mis Boletos</button>
-                <button onClick={() => navigate('/')} className="px-6 py-3 rounded-xl font-semibold text-sm border border-gray-700 text-gray-300">Volver al inicio</button>
+                <button onClick={() => navigate('/')} className="px-6 py-3 rounded-xl font-semibold text-sm border border-gray-700 text-gray-300">Volver al Inicio</button>
               </div>
             </motion.div>
           ) : (
@@ -168,13 +168,13 @@ export default function CheckoutPage() {
                   {reservedTickets.map((t) => (
                     <div key={t.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: '#1a1a1a' }}>
                       <span className="text-white font-semibold">#{t.ticket_number}</span>
-                      <span className="font-semibold" style={{ color: GOLD }}>${ticketPrice.toLocaleString()} MXN</span>
+                      <span className="font-semibold" style={{ color: GOLD }}>${ticketPrice.toLocaleString()} CLP</span>
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-800 flex justify-between">
                   <span className="text-white font-bold">Total</span>
-                  <span className="font-bold text-lg" style={{ color: GOLD }}>${totalAmount.toLocaleString()} MXN</span>
+                  <span className="font-bold text-lg" style={{ color: GOLD }}>${totalAmount.toLocaleString()} CLP</span>
                 </div>
               </div>
 

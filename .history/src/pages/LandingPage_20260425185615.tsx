@@ -191,7 +191,7 @@ export default function LandingPage() {
             <div>
               <h2 className="text-xl font-bold text-white">Selecciona tus Boletos</h2>
               <p className="text-gray-500 text-sm mt-1">
-                ${ticketPrice.toLocaleString()} MXN por boleto - Haz clic en los numeros que deseas
+                ${ticketPrice.toLocaleString()} CLP por boleto - Haz clic en los numeros que deseas
               </p>
             </div>
             <div className="flex items-center gap-4 text-xs text-gray-400">
@@ -222,7 +222,7 @@ export default function LandingPage() {
                   {selectedTickets.length} boleto{selectedTickets.length > 1 ? 's' : ''} seleccionado{selectedTickets.length > 1 ? 's' : ''}
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Total: ${(selectedTickets.length * ticketPrice).toLocaleString()} MXN
+                  Total: ${(selectedTickets.length * ticketPrice).toLocaleString()} CLP
                 </p>
               </div>
               {user ? (

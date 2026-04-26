@@ -24,7 +24,7 @@ export default function LoginPage() {
     } catch (err: any) {
       setError(err.message === 'Invalid login credentials'
         ? 'Credenciales invalidas'
-        : 'Error al iniciar sesion' + (err.message ? `: ${err.message}` : ''));
+        : 'Error al iniciar sesion');
     } finally {
       setLoading(false);
     }

@@ -24,7 +24,7 @@ export default function LoginPage() {
     } catch (err: any) {
       setError(err.message === 'Invalid login credentials'
         ? 'Credenciales invalidas'
-        : 'Error al iniciar sesion' + (err.message ? `: ${err.message}` : ''));
+        : 'Error al iniciar sesion');
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ export default function LoginPage() {
           </button>
 
           <p className="text-center text-sm text-gray-500">
-            ¿No tienes cuenta?{' '}
+            No tienes cuenta?{' '}
             <Link to="/register" className="font-semibold hover:underline" style={{ color: GOLD }}>
               Registrate
             </Link>

@@ -5,9 +5,10 @@ import { Wine, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { GOLD } from '../lib/constants';
 
-export default function LoginPage() {
-  const { signIn } = useAuth();
+export default function RegisterPage() {
+  const { signUp } = useAuth();
   const navigate = useNavigate();
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,12 +20,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signUp(email, password, fullName);
       navigate('/');
     } catch (err: any) {
-      setError(err.message === 'Invalid login credentials'
-        ? 'Credenciales invalidas'
-        : 'Error al iniciar sesion' + (err.message ? `: ${err.message}` : ''));
+      setError(
+        err.message?.includes('already registered')
+          ? 'Este email ya esta registrado'
+          : 'Error al crear cuenta' + (err.message ? `: ${err.message}` : '')
+      );
     } finally {
       setLoading(false);
     }
@@ -44,8 +47,8 @@ export default function LoginPage() {
               Luxury<span style={{ color: GOLD }}>Raffle</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-white">Iniciar Sesion</h1>
-          <p className="text-gray-500 text-sm mt-1">Accede a tu cuenta para reservar tickets</p>
+          <h1 className="text-2xl font-bold text-white">Crear Cuenta</h1>
+          <p className="text-gray-500 text-sm mt-1">Registrate para participar en el sorteo</p>
         </div>
 
         <form
@@ -59,6 +62,19 @@ export default function LoginPage() {
               {error}
             </div>
           )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">Nombre completo</label>
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-xl text-white text-sm outline-none transition-all focus:ring-2"
+              style={{ background: '#1a1a1a', border: '1px solid #333' }}
+              placeholder="Tu nombre"
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
@@ -81,9 +97,10 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
                 className="w-full px-4 py-3 rounded-xl text-white text-sm outline-none transition-all focus:ring-2 pr-12"
                 style={{ background: '#1a1a1a', border: '1px solid #333' }}
-                placeholder="********"
+                placeholder="Minimo 6 caracteres"
               />
               <button
                 type="button"
@@ -101,13 +118,13 @@ export default function LoginPage() {
             className="w-full py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50"
             style={{ background: GOLD, color: '#101010' }}
           >
-            {loading ? 'Ingresando...' : 'Ingresar'}
+            {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
           </button>
 
           <p className="text-center text-sm text-gray-500">
-            ¿No tienes cuenta?{' '}
-            <Link to="/register" className="font-semibold hover:underline" style={{ color: GOLD }}>
-              Registrate
+            Ya tienes cuenta?{' '}
+            <Link to="/login" className="font-semibold hover:underline" style={{ color: GOLD }}>
+              Inicia sesion
             </Link>
           </p>
         </form>

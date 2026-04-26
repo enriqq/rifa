@@ -12,6 +12,7 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
+    { to: '/', label: 'Inicio' },
     ...(user ? [{ to: '/dashboard', label: 'Mis Tickets' }] : []),
     ...(profile?.is_admin ? [{ to: '/admin-portal', label: 'Admin' }] : []),
   ];

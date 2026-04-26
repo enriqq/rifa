@@ -7,7 +7,6 @@ export interface TicketData {
   ticket_number: number;
   status: 'available' | 'reserved' | 'pending' | 'sold';
   reserved_by: string | null;
-  prize_id: string;
 }
 
 interface TicketGridProps {
@@ -18,30 +17,10 @@ interface TicketGridProps {
 }
 
 const statusStyles: Record<string, { bg: string; border: string; text: string; cursor: string }> = {
-  available: {
-    bg: 'transparent',
-    border: GOLD,
-    text: GOLD,
-    cursor: 'pointer',
-  },
-  reserved: {
-    bg: 'rgba(255, 193, 7, 0.15)',
-    border: '#FFC107',
-    text: '#FFC107',
-    cursor: 'default',
-  },
-  pending: {
-    bg: 'rgba(255, 152, 0, 0.15)',
-    border: '#FF9800',
-    text: '#FF9800',
-    cursor: 'default',
-  },
-  sold: {
-    bg: 'rgba(244, 67, 54, 0.15)',
-    border: '#F44336',
-    text: '#F44336',
-    cursor: 'not-allowed',
-  },
+  available: { bg: 'transparent', border: GOLD, text: GOLD, cursor: 'pointer' },
+  reserved: { bg: 'rgba(255, 193, 7, 0.15)', border: '#FFC107', text: '#FFC107', cursor: 'default' },
+  pending: { bg: 'rgba(255, 152, 0, 0.15)', border: '#FF9800', text: '#FF9800', cursor: 'default' },
+  sold: { bg: 'rgba(244, 67, 54, 0.15)', border: '#F44336', text: '#F44336', cursor: 'not-allowed' },
 };
 
 export default function TicketGrid({ tickets, selectedTickets, onToggle, currentUserId }: TicketGridProps) {
@@ -77,9 +56,7 @@ export default function TicketGrid({ tickets, selectedTickets, onToggle, current
               ${isSelected ? 'ring-2 ring-offset-1 ring-offset-transparent' : ''}
             `}
             style={{
-              background: isSelected
-                ? `linear-gradient(135deg, ${GOLD}, #b8941e)`
-                : style.bg,
+              background: isSelected ? `linear-gradient(135deg, ${GOLD}, #b8941e)` : style.bg,
               borderColor: isSelected ? GOLD : style.border,
               color: isSelected ? CHARCOAL : style.text,
               cursor: style.cursor,
@@ -88,7 +65,7 @@ export default function TicketGrid({ tickets, selectedTickets, onToggle, current
           >
             {ticket.ticket_number}
             {ticket.status === 'sold' && (
-              <span className="absolute inset-0 flex items-center justify-center text-lg opacity-60">✕</span>
+              <span className="absolute inset-0 flex items-center justify-center text-lg opacity-60">&#10005;</span>
             )}
           </motion.button>
         );

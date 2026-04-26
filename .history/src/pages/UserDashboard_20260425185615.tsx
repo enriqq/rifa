@@ -77,7 +77,7 @@ export default function UserDashboard() {
             <div className="rounded-2xl border border-gray-800 overflow-hidden" style={{ background: '#141414' }}>
               <div className="p-5 border-b border-gray-800">
                 <h3 className="text-lg font-semibold text-white">{raffleName}</h3>
-                <p className="text-gray-500 text-sm">${ticketPrice.toLocaleString()} MXN por boleto</p>
+                <p className="text-gray-500 text-sm">${ticketPrice.toLocaleString()} CLP por boleto</p>
               </div>
               <div className="divide-y divide-gray-800/50">
                 {tickets.map((ticket, i) => {
