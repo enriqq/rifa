@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Wine } from 'lucide-react';
 import { GOLD } from '../lib/constants';
+import Modal from '../components/Modal';
 
 interface PrizeCardProps {
   tier: number;
@@ -58,3 +59,16 @@ export default function PrizeCard({ tier, name, description, imageUrl, ticketPri
     </motion.div>
   );
 }
+
+<Modal open={!!modalPrize} onClose={() => setModalPrize(null)}>
+  {modalPrize && (
+    <div className="text-center">
+      <img src={modalPrize.image_url} alt={modalPrize.name} className="w-full h-48 object-cover rounded-xl mb-4" />
+      <h2 className="text-2xl font-bold text-white mb-2">{modalPrize.name}</h2>
+      <p className="text-gray-400 mb-4">{modalPrize.description}</p>
+      <div className="text-lg font-semibold" style={{ color: GOLD }}>
+        ${modalPrize.ticket_price.toLocaleString()} MXN <span className="text-sm text-gray-500">/ boleto</span>
+      </div>
+    </div>
+  )}
+</Modal>

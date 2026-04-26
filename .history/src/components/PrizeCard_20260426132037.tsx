@@ -23,6 +23,7 @@ const tierGradients: Record<number, string> = {
   3: 'linear-gradient(135deg, #CD7F32 0%, #D4956A 50%, #CD7F32 100%)',
 };
 
+const [modalPrize, setModalPrize] = useState<Prize | null>(null);
 
 export default function PrizeCard({ tier, name, description, imageUrl, ticketPrice, onClick }: PrizeCardProps) {
   return (
@@ -58,3 +59,13 @@ export default function PrizeCard({ tier, name, description, imageUrl, ticketPri
     </motion.div>
   );
 }
+
+<PrizeCard
+  key={prize.id}
+  tier={prize.tier}
+  name={prize.name}
+  description={prize.description}
+  imageUrl={prize.image_url}
+  ticketPrice={prize.ticket_price}
+  onClick={() => setModalPrize(prize)}
+/>

@@ -44,7 +44,7 @@ export default function LoginPage() {
               Rifando<span style={{ color: GOLD }}>Ando</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-white">Iniciar sesión</h1>
+          <h1 className="text-2xl font-bold text-white">Iniciar Sesion</h1>
           <p className="text-gray-500 text-sm mt-1">Accede a tu cuenta para reservar tickets</p>
         </div>
 
@@ -74,7 +74,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">Contraseña</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1.5">Contrasena</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -107,7 +107,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-500">
             ¿No tienes cuenta?{' '}
             <Link to="/register" className="font-semibold hover:underline" style={{ color: GOLD }}>
-              Regístrate
+              Registrate
             </Link>
           </p>
         </form>

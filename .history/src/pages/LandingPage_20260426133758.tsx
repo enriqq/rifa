@@ -10,6 +10,7 @@ import TicketGrid from "../components/TicketGrid";
 import ReservationTimer from "../components/ReservationTimer";
 import { GOLD } from "../lib/constants";
 import Modal from "../components/Modal";
+import ReactMarkdown from "react-markdown";
 
 interface Prize {
   id: string;
@@ -33,12 +34,6 @@ interface Ticket {
   ticket_number: number;
   status: "available" | "reserved" | "pending" | "sold";
   reserved_by: string | null;
-}
-
-function stripHtml(html: string) {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.textContent || div.innerText || "";
 }
 
 export default function LandingPage() {
@@ -238,7 +233,7 @@ export default function LandingPage() {
               key={prize.id}
               tier={prize.tier}
               name={prize.name}
-              description={stripHtml(prize.description)}
+              description={prize.description}
               imageUrl={prize.image_url}
               ticketPrice={ticketPrice}
               onClick={() => setModalPrize(prize)}
@@ -352,29 +347,19 @@ export default function LandingPage() {
 
       <Modal open={!!modalPrize} onClose={() => setModalPrize(null)}>
         {modalPrize && (
-          <div className="flex flex-col md:flex-row gap-6 items-stretch text-left">
-            {/* Imagen a la izquierda */}
-            <div className="md:w-1/2 w-full flex-shrink-0 flex items-center justify-center">
-              <img
-                src={modalPrize.image_url}
-                alt={modalPrize.name}
-                className="rounded-xl object-cover w-full h-72 md:h-[420px] bg-black"
-                style={{ maxWidth: 320 }}
-              />
-            </div>
-            {/* Descripción a la derecha */}
-            <div className="md:w-1/2 w-full flex flex-col justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">{modalPrize.name}</h2>
-                <div
-                  className="text-gray-300 mb-4 prose prose-invert prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{ __html: modalPrize.description }}
-                />
-              </div>
-              <div className="text-lg font-semibold mt-4" style={{ color: GOLD }}>
-                ${ticketPrice?.toLocaleString?.() ?? ""} MXN{" "}
-                <span className="text-sm text-gray-500">/ boleto</span>
-              </div>
+          <div className="text-center">
+            <img
+              src={modalPrize.image_url}
+              alt={modalPrize.name}
+              className="w-full h-64 object-cover rounded-xl mb-4"
+            />
+            <h2 className="text-2xl font-bold text-white mb-4">{modalPrize.name}</h2>
+            <ReactMarkdown className="text-gray-300 text-left mb-4 prose prose-invert prose-sm max-w-none">
+              {modalPrize.description}
+            </ReactMarkdown>
+            <div className="text-lg font-semibold mt-4" style={{ color: GOLD }}>
+              ${ticketPrice?.toLocaleString?.() ?? ""} MXN{" "}
+              <span className="text-sm text-gray-500">/ boleto</span>
             </div>
           </div>
         )}
