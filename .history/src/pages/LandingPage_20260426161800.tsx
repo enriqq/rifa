@@ -306,7 +306,7 @@ export default function LandingPage() {
           <TicketGrid
             tickets={tickets}
             selectedTickets={selectedTickets}
-            onToggle={profile?.is_admin ? () => {} : handleToggleTicket}
+            onToggle={handleToggleTicket}
             currentUserId={user?.id ?? null}
           />
 

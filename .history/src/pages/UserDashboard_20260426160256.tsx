@@ -70,7 +70,7 @@ export default function UserDashboard() {
             <h2 className="text-xl font-bold text-white mb-2">No tienes boletos</h2>
             <p className="text-gray-500 mb-6">Selecciona boletos desde la pagina principal</p>
             <button onClick={() => navigate('/')} className="px-6 py-3 rounded-xl font-semibold text-sm"
-              style={{ background: GOLD, color: '#101010' }}>Ver rifa</button>
+              style={{ background: GOLD, color: '#101010' }}>Ver Sorteo</button>
           </motion.div>
         ) : (
           <div className="space-y-6">

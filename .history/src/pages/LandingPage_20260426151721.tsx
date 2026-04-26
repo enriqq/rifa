@@ -42,7 +42,7 @@ function stripHtml(html: string) {
 }
 
 export default function LandingPage() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [raffle, setRaffle] = useState<Raffle | null>(null);
   const [prizes, setPrizes] = useState<Prize[]>([]);
@@ -306,11 +306,11 @@ export default function LandingPage() {
           <TicketGrid
             tickets={tickets}
             selectedTickets={selectedTickets}
-            onToggle={profile?.is_admin ? () => {} : handleToggleTicket}
+            onToggle={handleToggleTicket}
             currentUserId={user?.id ?? null}
           />
 
-          {!profile?.is_admin && selectedTickets.length > 0 && (
+          {selectedTickets.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -334,7 +334,7 @@ export default function LandingPage() {
                   className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105"
                   style={{ background: "#2E7D32", color: "#fff" }}
                 >
-                  Reservar boletos <ArrowRight size={16} />
+                  Reservar Boletos <ArrowRight size={16} />
                 </button>
               ) : (
                 <button
@@ -342,7 +342,7 @@ export default function LandingPage() {
                   className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105"
                   style={{ background: GOLD, color: "#101010" }}
                 >
-                  Inicia sesión para reservar <ArrowRight size={16} />
+                  Inicia sesiÓn para reservar <ArrowRight size={16} />
                 </button>
               )}
             </motion.div>
@@ -365,18 +365,13 @@ export default function LandingPage() {
             {/* Descripción a la derecha */}
             <div className="md:w-1/2 w-full flex flex-col justify-between pr-12">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-4">
-                  {modalPrize.name}
-                </h2>
+                <h2 className="text-2xl font-bold text-white mb-4">{modalPrize.name}</h2>
                 <div
                   className="text-gray-300 mb-4 prose prose-invert prose-sm max-w-none"
                   dangerouslySetInnerHTML={{ __html: modalPrize.description }}
                 />
               </div>
-              <div
-                className="text-lg font-semibold mt-4"
-                style={{ color: GOLD }}
-              >
+              <div className="text-lg font-semibold mt-4" style={{ color: GOLD }}>
                 ${ticketPrice?.toLocaleString?.() ?? ""} MXN{" "}
                 <span className="text-sm text-gray-500">/ boleto</span>
               </div>

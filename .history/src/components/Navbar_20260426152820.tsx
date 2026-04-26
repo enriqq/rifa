@@ -12,12 +12,9 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
-    ...(user && !profile?.is_admin ? [{ to: '/dashboard', label: 'Mis tickets' }] : []),
-    ...(profile?.is_admin ? [{ to: '/admin-portal', label: 'Admin' }] : []),
+    ...(user ? [{ to: '/dashboard', label: 'Mis tickets' }] : []),
+    ...(profile?.is_admin ? [{ to: '/admin-portal', label: 'Admin' }] : [{ label: 'Sorteos', to: '/raffles' }]),
   ];
-
-  console.log("user", user);
-  console.log("profile", profile);
 
   return (
     <nav

@@ -1,6 +1,5 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 
 export default function Modal({
     open,
@@ -23,15 +22,14 @@ export default function Modal({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="bg-[#181818] rounded-2xl p-4 sm:p-6 max-w-5xl w-full relative max-h-[90vh] overflow-y-auto"
+                        className="bg-[#181818] rounded-2xl p-2 sm:p-6 max-w-5xl w-full relative max-h-[90vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={onClose}
-                            className="absolute top-2 right-2 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/60 transition-colors border border-white/10 text-gray-300 hover:text-white shadow-lg z-10"
-                            aria-label="Cerrar"
+                            className="absolute top-3 right-3 text-gray-400 hover:text-white text-xl"
                         >
-                            <X size={22} />
+                            &times;
                         </button>
                         {children}
                     </motion.div>

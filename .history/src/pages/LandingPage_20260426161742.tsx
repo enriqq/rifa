@@ -302,13 +302,14 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
-
-          <TicketGrid
-            tickets={tickets}
-            selectedTickets={selectedTickets}
-            onToggle={profile?.is_admin ? () => {} : handleToggleTicket}
-            currentUserId={user?.id ?? null}
-          />
+          {!profile?.is_admin && (
+            <TicketGrid
+              tickets={tickets}
+              selectedTickets={selectedTickets}
+              onToggle={handleToggleTicket}
+              currentUserId={user?.id ?? null}
+            />
+          )}
 
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div

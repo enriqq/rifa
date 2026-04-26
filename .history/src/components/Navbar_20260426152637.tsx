@@ -12,12 +12,9 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
-    ...(user && !profile?.is_admin ? [{ to: '/dashboard', label: 'Mis tickets' }] : []),
+    ...(user ? [{ to: '/dashboard', label: 'Mis tickets' }] : []),
     ...(profile?.is_admin ? [{ to: '/admin-portal', label: 'Admin' }] : []),
   ];
-
-  console.log("user", user);
-  console.log("profile", profile);
 
   return (
     <nav
@@ -43,7 +40,7 @@ export default function Navbar() {
                     ? 'text-white'
                     : 'text-gray-400 hover:text-white'
                 }`}
-                style={isActive(link.to) ? { background: '#1a1a1a', color: '#D4AF37' } : {}}
+                style={isActive(link.to) ? { background: '#1a1a1a', color: '#ffffff' } : {}}
               >
                 {link.label}
               </Link>
