@@ -78,15 +78,21 @@ Deno.serve(async (req: Request) => {
         })
         .eq("id", ticketId);
 
-      // Busca el email del usuario
-      const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+        // Busca el email del usuario
+        const { data: ticket } = await adminClient
+          .from("tickets")
+          .select("reserved_by")
+          .eq("id", ticketId)
+          .maybeSingle();
 
-      // Envía el correo
-      await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
-        to: userData?.user?.email,
-        subject: "¡Tu boleto ha sido aprobado!",
-        html: `
+        const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+
+        // Envía el correo
+        await resend.emails.send({
+          from: "RifandoAndo <no-reply@rifa-zeta-opal.vercel.app>",
+          to: userData?.user?.email,
+          subject: "¡Tu boleto ha sido aprobado!",
+          html: `
   <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
     <h2 style="color: #FFD700; text-align: center; margin-bottom: 16px;">🎉 ¡Felicidades!</h2>
     <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
@@ -107,17 +113,10 @@ Deno.serve(async (req: Request) => {
     </p>
   </div>
   `
-      });
+        });
 
       if (error) throw error;
     } else if (action === "reject") {
-      // Solo declara ticket una vez aquí
-      const { data: ticket } = await adminClient
-        .from("tickets")
-        .select("reserved_by")
-        .eq("id", ticketId)
-        .maybeSingle();
-
       const { error } = await adminClient
         .from("tickets")
         .update({
@@ -128,15 +127,21 @@ Deno.serve(async (req: Request) => {
         })
         .eq("id", ticketId);
 
-      // Busca el email del usuario
-      const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+        // Busca el email del usuario
+        const { data: ticket } = await adminClient
+          .from("tickets")
+          .select("reserved_by")
+          .eq("id", ticketId)
+          .maybeSingle();
 
-      // Envía el correo
-      await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
-        to: userData?.user?.email,
-        subject: "Tu comprobante fue rechazado",
-        html: `
+        const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+
+        // Envía el correo
+        await resend.emails.send({
+          from: "RifandoAndo <no-reply@rifa-zeta-opal.vercel.app>",
+          to: userData?.user?.email,
+          subject: "Tu comprobante fue rechazado",
+          html: `
   <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
     <h2 style="color: #FF5252; text-align: center; margin-bottom: 16px;">❌ Comprobante rechazado</h2>
     <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
@@ -157,8 +162,7 @@ Deno.serve(async (req: Request) => {
     </p>
   </div>
   `
-      });
-
+        });
       if (error) throw error;
 
       await adminClient

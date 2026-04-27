@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, CheckCircle, XCircle, User,
-  FileText, Image as ImageIcon, RefreshCw
+  FileText, Image as ImageIcon
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -62,13 +62,8 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (!profile?.is_admin) return;
-    const interval = setInterval(() => {
-      fetchPending();
-    }, 5000); // 5,000 ms = 5 segundos
-
-    return () => clearInterval(interval);
-  }, [profile?.is_admin, fetchPending]);
+    if (profile?.is_admin) fetchPending();
+  }, [profile?.is_admin]);
 
   const handleAction = async (ticketId: string, action: 'approve' | 'reject') => {
     setActionLoading(ticketId);
@@ -96,22 +91,10 @@ export default function AdminDashboard() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-3 mb-2">
             <Shield size={24} style={{ color: GOLD }} />
-            <h1 className="text-3xl font-bold text-white">Panel de administración</h1>
-            <button
-              onClick={() => {
-                setLoading(true);
-                fetchPending();
-              }}
-              className="ml-4 px-3 py-1.5 rounded-lg text-sm font-semibold bg-gray-800 text-gray-200 hover:bg-gray-700 transition"
-              disabled={loading}
-              title="Refrescar"
-              type="button"
-            >
-              {loading ? "..." : <RefreshCw size={18} className="inline mr-1" />}
-            </button>
+            <h1 className="text-3xl font-bold text-white">Panel de Administracion</h1>
           </div>
           <p className="text-gray-500 mb-8">
-            {pendingTickets.length} boleto{pendingTickets.length !== 1 ? 's' : ''} pendiente{pendingTickets.length !== 1 ? 's' : ''} de validación
+            {pendingTickets.length} boleto{pendingTickets.length !== 1 ? 's' : ''} pendiente{pendingTickets.length !== 1 ? 's' : ''} de validacion
           </p>
         </motion.div>
 
@@ -124,8 +107,8 @@ export default function AdminDashboard() {
         ) : pendingTickets.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
             <CheckCircle size={48} className="mx-auto mb-4 text-green-600" />
-            <h2 className="text-xl font-bold text-white mb-2">Todo al día</h2>
-            <p className="text-gray-500">No hay boletos pendientes de validación</p>
+            <h2 className="text-xl font-bold text-white mb-2">Todo al dia</h2>
+            <p className="text-gray-500">No hay boletos pendientes de validacion</p>
           </motion.div>
         ) : (
           <div className="space-y-4">

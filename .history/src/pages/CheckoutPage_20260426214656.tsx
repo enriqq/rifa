@@ -186,7 +186,7 @@ export default function CheckoutPage() {
                   {[
                     ['Banco', BANK_DETAILS.bank],
                     ['Cuenta', BANK_DETAILS.accountNumber], ['Titular', BANK_DETAILS.holderName],
-                    ['Dimo®', BANK_DETAILS.dimo], ['Email', BANK_DETAILS.email],
+                    ['DIMO', BANK_DETAILS.dimo], ['Email', BANK_DETAILS.email],
                   ].map(([label, value]) => (
                     <div key={label} className="flex justify-between">
                       <span className="text-gray-500 text-sm">{label}</span>
@@ -194,12 +194,12 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-gray-500 text-xs mt-3">Transfiere o deposita el monto exacto y sube tu comprobante a continuación.</p>
+                <p className="text-gray-500 text-xs mt-3">Transfiere el monto exacto y sube tu comprobante a continuacion.</p>
               </div>
 
               <div className="rounded-2xl border border-gray-800 p-6" style={{ background: '#141414' }}>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Upload size={18} style={{ color: GOLD }} /> Subir comprobante
+                  <Upload size={18} style={{ color: GOLD }} /> Subir Comprobante
                 </h3>
                 <div onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}

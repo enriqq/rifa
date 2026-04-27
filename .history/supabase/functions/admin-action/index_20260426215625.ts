@@ -83,7 +83,7 @@ Deno.serve(async (req: Request) => {
 
       // Envía el correo
       await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
+        from: "RifandoAndo <no-reply@rifa-zeta-opal.vercel.app>",
         to: userData?.user?.email,
         subject: "¡Tu boleto ha sido aprobado!",
         html: `
@@ -133,7 +133,7 @@ Deno.serve(async (req: Request) => {
 
       // Envía el correo
       await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
+        from: "RifandoAndo <no-reply@rifa-zeta-opal.vercel.app>",
         to: userData?.user?.email,
         subject: "Tu comprobante fue rechazado",
         html: `

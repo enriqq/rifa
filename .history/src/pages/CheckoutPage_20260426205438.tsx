@@ -128,7 +128,7 @@ export default function CheckoutPage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
           <AlertCircle size={48} className="mx-auto mb-4 text-gray-600" />
           <h2 className="text-xl font-bold text-white mb-2">No tienes boletos reservados</h2>
-          <p className="text-gray-500 mb-6">Selecciona boletos desde la página principal</p>
+          <p className="text-gray-500 mb-6">Selecciona boletos desde la pagina principal</p>
           <button onClick={() => navigate('/')} className="px-6 py-3 rounded-xl font-semibold text-sm"
             style={{ background: GOLD, color: '#101010' }}>Volver al inicio</button>
         </motion.div>
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
       <ReservationTimer expiresAt={earliestExpiry} onExpired={handleExpired} />
       <div className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl font-bold text-white mb-2">Resumen</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Checkout</h1>
           <p className="text-gray-500 mb-8">Completa tu pago para confirmar tus boletos</p>
         </motion.div>
 
@@ -150,11 +150,11 @@ export default function CheckoutPage() {
             <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
               className="rounded-2xl border border-gray-800 p-8 text-center" style={{ background: '#141414' }}>
               <CheckCircle size={64} className="mx-auto mb-4" style={{ color: '#2E7D32' }} />
-              <h2 className="text-2xl font-bold text-white mb-2">Comprobante enviado</h2>
-              <p className="text-gray-400 mb-6">Tu comprobante está siendo validado. Recibirás la confirmación pronto.</p>
+              <h2 className="text-2xl font-bold text-white mb-2">Comprobante Enviado</h2>
+              <p className="text-gray-400 mb-6">Tu comprobante esta siendo validado. Recibiras la confirmacion pronto.</p>
               <div className="flex gap-3 justify-center">
                 <button onClick={() => navigate('/dashboard')} className="px-6 py-3 rounded-xl font-semibold text-sm"
-                  style={{ background: GOLD, color: '#101010' }}>Ver mis boletos</button>
+                  style={{ background: GOLD, color: '#101010' }}>Ver Mis Boletos</button>
                 <button onClick={() => navigate('/')} className="px-6 py-3 rounded-xl font-semibold text-sm border border-gray-700 text-gray-300">Volver al inicio</button>
               </div>
             </motion.div>
@@ -162,7 +162,7 @@ export default function CheckoutPage() {
             <motion.div key="checkout" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
               <div className="rounded-2xl border border-gray-800 p-6" style={{ background: '#141414' }}>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Clock size={18} style={{ color: GOLD }} /> Boletos reservados
+                  <Clock size={18} style={{ color: GOLD }} /> Boletos Reservados
                 </h3>
                 <div className="space-y-2">
                   {reservedTickets.map((t) => (
@@ -180,13 +180,13 @@ export default function CheckoutPage() {
 
               <div className="rounded-2xl border border-gray-800 p-6" style={{ background: '#141414' }}>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <CreditCard size={18} style={{ color: GOLD }} /> Datos bancarios
+                  <CreditCard size={18} style={{ color: GOLD }} /> Datos Bancarios
                 </h3>
                 <div className="space-y-3 p-4 rounded-xl" style={{ background: '#1a1a1a' }}>
                   {[
-                    ['Banco', BANK_DETAILS.bank],
+                    ['Banco', BANK_DETAILS.bank], ['Tipo', BANK_DETAILS.accountType],
                     ['Cuenta', BANK_DETAILS.accountNumber], ['Titular', BANK_DETAILS.holderName],
-                    ['Dimo®', BANK_DETAILS.dimo], ['Email', BANK_DETAILS.email],
+                    ['RUT', BANK_DETAILS.rut], ['Email', BANK_DETAILS.email],
                   ].map(([label, value]) => (
                     <div key={label} className="flex justify-between">
                       <span className="text-gray-500 text-sm">{label}</span>
@@ -194,12 +194,12 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-gray-500 text-xs mt-3">Transfiere o deposita el monto exacto y sube tu comprobante a continuación.</p>
+                <p className="text-gray-500 text-xs mt-3">Transfiere el monto exacto y sube tu comprobante a continuacion.</p>
               </div>
 
               <div className="rounded-2xl border border-gray-800 p-6" style={{ background: '#141414' }}>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Upload size={18} style={{ color: GOLD }} /> Subir comprobante
+                  <Upload size={18} style={{ color: GOLD }} /> Subir Comprobante
                 </h3>
                 <div onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}

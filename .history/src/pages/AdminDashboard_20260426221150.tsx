@@ -62,13 +62,8 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (!profile?.is_admin) return;
-    const interval = setInterval(() => {
-      fetchPending();
-    }, 5000); // 5,000 ms = 5 segundos
-
-    return () => clearInterval(interval);
-  }, [profile?.is_admin, fetchPending]);
+    if (profile?.is_admin) fetchPending();
+  }, [profile?.is_admin]);
 
   const handleAction = async (ticketId: string, action: 'approve' | 'reject') => {
     setActionLoading(ticketId);

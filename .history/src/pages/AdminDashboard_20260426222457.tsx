@@ -65,7 +65,7 @@ export default function AdminDashboard() {
     if (!profile?.is_admin) return;
     const interval = setInterval(() => {
       fetchPending();
-    }, 5000); // 5,000 ms = 5 segundos
+    }, 30000); // 30,000 ms = 30 segundos
 
     return () => clearInterval(interval);
   }, [profile?.is_admin, fetchPending]);

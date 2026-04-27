@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, CheckCircle, XCircle, User,
-  FileText, Image as ImageIcon, RefreshCw
+  FileText, Image as ImageIcon
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -62,13 +62,8 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (!profile?.is_admin) return;
-    const interval = setInterval(() => {
-      fetchPending();
-    }, 5000); // 5,000 ms = 5 segundos
-
-    return () => clearInterval(interval);
-  }, [profile?.is_admin, fetchPending]);
+    if (profile?.is_admin) fetchPending();
+  }, [profile?.is_admin]);
 
   const handleAction = async (ticketId: string, action: 'approve' | 'reject') => {
     setActionLoading(ticketId);
@@ -107,7 +102,7 @@ export default function AdminDashboard() {
               title="Refrescar"
               type="button"
             >
-              {loading ? "..." : <RefreshCw size={18} className="inline mr-1" />}
+              {loading ? "..." : "Refrescar"}
             </button>
           </div>
           <p className="text-gray-500 mb-8">

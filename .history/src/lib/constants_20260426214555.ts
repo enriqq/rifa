@@ -5,9 +5,10 @@ export const RESERVATION_MINUTES = 15;
 
 export const BANK_DETAILS = {
   bank: 'Mercado Pago W',
+  accountType: 'Cuenta Corriente',
   accountNumber: '722969010445849727',
   holderName: 'Enrique Esparza Montoya',
-  dimo: '4491080131',
+  rut: '12.345.678-9',
   email: 'enriqueesmon@gmail.com',
 };
 

@@ -47,7 +47,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: tickets, error: ticketsError } = await adminClient
       .from("tickets")
-      .select("id, ticket_number, raffle_id, reserved_by, raffles!inner(name, ticket_price), receipts(file_url, file_name, file_type, created_at)")
+      .select("id, ticket_number, raffle_id, reserved_by, raffles!inner(name, ticket_price), profiles(full_name), receipts(file_url, file_name, file_type, created_at)")
       .eq("status", "pending")
       .order("ticket_number");
 
@@ -60,22 +60,10 @@ Deno.serve(async (req: Request) => {
 
     const enriched = await Promise.all(
       (tickets || []).map(async (t: any) => {
-        // Busca el nombre en profiles usando reserved_by
-        const { data: profileData } = await adminClient
-          .from("profiles")
-          .select("full_name")
-          .eq("id", t.reserved_by)
-          .maybeSingle();
-
-        // Busca el email en auth
         const { data: userData } = await adminClient.auth.admin.getUserById(t.reserved_by);
-
         return {
           ...t,
-          profiles: {
-            full_name: profileData?.full_name || "",
-            email: userData?.user?.email || "",
-          },
+          profiles: { full_name: t.profiles?.full_name || "", email: userData?.user?.email || "" },
         };
       })
     );

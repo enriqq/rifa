@@ -78,15 +78,21 @@ Deno.serve(async (req: Request) => {
         })
         .eq("id", ticketId);
 
-      // Busca el email del usuario
-      const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+        // Busca el email del usuario
+        const { data: ticket } = await adminClient
+          .from("tickets")
+          .select("reserved_by")
+          .eq("id", ticketId)
+          .maybeSingle();
 
-      // Envía el correo
-      await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
-        to: userData?.user?.email,
-        subject: "¡Tu boleto ha sido aprobado!",
-        html: `
+        const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+
+        // Envía el correo
+        await resend.emails.send({
+          from: "RifandoAndo <no-reply@tudominio.com>",
+          to: userData?.user?.email,
+          subject: "¡Tu boleto ha sido aprobado!",
+          html: `
   <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
     <h2 style="color: #FFD700; text-align: center; margin-bottom: 16px;">🎉 ¡Felicidades!</h2>
     <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
@@ -100,24 +106,17 @@ Deno.serve(async (req: Request) => {
       Puedes ver tus boletos y el estado de tu participación en tu panel de usuario.
     </p>
     <div style="text-align: center; margin-top: 32px;">
-      <a href="https://rifa-zeta-opal.vercel.app/dashboard" style="background: #FFD700; color: #101010; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Ver mis boletos</a>
+      <a href="https://tusitio.com/dashboard" style="background: #FFD700; color: #101010; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Ver mis boletos</a>
     </div>
     <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
       Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
     </p>
   </div>
   `
-      });
+        });
 
       if (error) throw error;
     } else if (action === "reject") {
-      // Solo declara ticket una vez aquí
-      const { data: ticket } = await adminClient
-        .from("tickets")
-        .select("reserved_by")
-        .eq("id", ticketId)
-        .maybeSingle();
-
       const { error } = await adminClient
         .from("tickets")
         .update({
@@ -128,15 +127,21 @@ Deno.serve(async (req: Request) => {
         })
         .eq("id", ticketId);
 
-      // Busca el email del usuario
-      const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+        // Busca el email del usuario
+        const { data: ticket } = await adminClient
+          .from("tickets")
+          .select("reserved_by")
+          .eq("id", ticketId)
+          .maybeSingle();
 
-      // Envía el correo
-      await resend.emails.send({
-        from: "RifandoAndo <onboarding@resend.dev>",
-        to: userData?.user?.email,
-        subject: "Tu comprobante fue rechazado",
-        html: `
+        const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
+
+        // Envía el correo
+        await resend.emails.send({
+          from: "RifandoAndo <no-reply@tudominio.com>",
+          to: userData?.user?.email,
+          subject: "Tu comprobante fue rechazado",
+          html: `
   <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
     <h2 style="color: #FF5252; text-align: center; margin-bottom: 16px;">❌ Comprobante rechazado</h2>
     <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
@@ -150,15 +155,14 @@ Deno.serve(async (req: Request) => {
       Si tienes dudas sobre el motivo del rechazo, contáctanos para más información.
     </p>
     <div style="text-align: center; margin-top: 32px;">
-      <a href="https://rifa-zeta-opal.vercel.app/checkout" style="background: #FF5252; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Subir nuevo comprobante</a>
+      <a href="https://tusitio.com/checkout" style="background: #FF5252; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Subir nuevo comprobante</a>
     </div>
     <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
       Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
     </p>
   </div>
   `
-      });
-
+        });
       if (error) throw error;
 
       await adminClient

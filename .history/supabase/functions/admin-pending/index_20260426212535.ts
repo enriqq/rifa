@@ -60,22 +60,10 @@ Deno.serve(async (req: Request) => {
 
     const enriched = await Promise.all(
       (tickets || []).map(async (t: any) => {
-        // Busca el nombre en profiles usando reserved_by
-        const { data: profileData } = await adminClient
-          .from("profiles")
-          .select("full_name")
-          .eq("id", t.reserved_by)
-          .maybeSingle();
-
-        // Busca el email en auth
         const { data: userData } = await adminClient.auth.admin.getUserById(t.reserved_by);
-
         return {
           ...t,
-          profiles: {
-            full_name: profileData?.full_name || "",
-            email: userData?.user?.email || "",
-          },
+          profiles: { full_name: t.profiles?.full_name || "", email: userData?.user?.email || "" },
         };
       })
     );
