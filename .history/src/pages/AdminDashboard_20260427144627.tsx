@@ -151,7 +151,7 @@ console.log("sold data", data, "error", error);
 
   if (!profile?.is_admin) return null;
 
-  // Agrupa los tickets pendientes por usuario
+  // Agrupa los tickets por usuario
   const grouped = Object.values(
     pendingTickets.reduce(
       (acc, ticket) => {
@@ -187,13 +187,12 @@ console.log("sold data", data, "error", error);
     tickets: SoldTicket[];
   };
 
-  const soldGrouped = Object.values(
+  const soldGrouped: SoldGroup[] = Object.values(
     soldTickets.reduce(
       (acc, ticket) => {
         const key = ticket.purchased_by;
         if (!acc[key]) {
           acc[key] = {
-            purchased_by: key,
             profile: ticket.profiles,
             tickets: [],
           };
@@ -201,14 +200,7 @@ console.log("sold data", data, "error", error);
         acc[key].tickets.push(ticket);
         return acc;
       },
-      {} as Record<
-        string,
-        {
-          purchased_by: string;
-          profile: SoldTicket["profiles"];
-          tickets: SoldTicket[];
-        }
-      >,
+      {} as Record<string, SoldGroup>,
     ),
   );
 
@@ -395,58 +387,54 @@ console.log("sold data", data, "error", error);
           </h2>
           {soldLoading ? (
             <div className="text-gray-400 py-8">Cargando...</div>
-          ) : soldGrouped.length === 0 ? (
-            <div className="text-gray-400 py-8">No hay boletos vendidos</div>
           ) : (
-            <div className="space-y-4">
-              <AnimatePresence>
-                {soldGrouped.map((group, i) => (
-                  <motion.div
-                    key={group.purchased_by}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="rounded-2xl border border-gray-800 overflow-hidden"
-                    style={{ background: "#181818" }}
-                  >
-                    <div className="p-5 sm:p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                        <div className="space-y-3 flex-1">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl font-bold text-white">
-                              {group.tickets.map(t => `#${t.ticket_number}`).join(", ")}
-                            </span>
-                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                              style={{ color: '#2E7D32', background: '#2E7D3215' }}>Vendido</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <User size={14} />
-                            <span>{group.profile?.full_name || 'Sin nombre'}</span>
-                            <span className="text-gray-700">|</span>
-                            <span>{group.profile?.email}</span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-2 text-right">
-                          <span className="text-sm text-gray-400">
-                            Última compra:{" "}
-                            {group.tickets
-                              .map(t => t.purchased_at)
-                              .sort()
-                              .reverse()[0]
-                              ?.replace("T", " ")
-                              .slice(0, 16) || "-"}
-                          </span>
-                          <span className="text-sm text-gray-400">
-                            Total: <b>{group.tickets.length}</b> boleto{group.tickets.length !== 1 ? "s" : ""}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+            <>
+              <div className="text-gray-400 mb-4">
+                Total vendidos:{" "}
+                <span className="font-bold text-green-400">
+                  {soldTickets.length}
+                </span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm text-gray-200 bg-[#181818] rounded-xl overflow-hidden">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 text-left">Usuario</th>
+                      <th className="px-4 py-2 text-left">Email</th>
+                      <th className="px-4 py-2 text-center"># Boletos</th>
+                      <th className="px-4 py-2 text-center">Números</th>
+                      <th className="px-4 py-2 text-center">Última compra</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {soldGrouped.map((group, i) => (
+                      <tr key={i} className="border-t border-gray-800">
+                        <td className="px-4 py-2">
+                          {group.profile?.full_name || "Sin nombre"}
+                        </td>
+                        <td className="px-4 py-2">{group.profile?.email}</td>
+                        <td className="px-4 py-2 text-center">
+                          {group.tickets.length}
+                        </td>
+                        <td className="px-4 py-2 text-center">
+                          {group.tickets
+                            .map((t: SoldTicket) => `#${t.ticket_number}`)
+                            .join(", ")}
+                        </td>
+                        <td className="px-4 py-2 text-center">
+                          {group.tickets
+                            .map((t: SoldTicket) => t.purchased_at)
+                            .sort()
+                            .reverse()[0]
+                            ?.replace("T", " ")
+                            .slice(0, 16) || "-"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </motion.div>
       </div>
