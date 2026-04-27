@@ -11,4 +11,8 @@ jobs:
     steps:
       - name: Llama a la función edge de Supabase
         run: |
-          curl -X GET https://crvxzmsirxorkklsugyh.supabase.co/functions/v1/notify-admin
+          curl -L -X POST 'https://crvxzmsirxorkklsugyh.supabase.co/functions/v1/notify-admin' \
+          -H 'Authorization: Bearer sb_publishable_XuRaOIREuFbbnr6JMMwscg_Wf1NVYNU' \
+          -H 'apikey: sb_publishable_XuRaOIREuFbbnr6JMMwscg_Wf1NVYNU' \
+          -H 'Content-Type: application/json' \
+          --data '{"name":"Functions"}'
