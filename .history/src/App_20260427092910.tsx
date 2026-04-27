@@ -8,7 +8,6 @@ import CheckoutPage from './pages/CheckoutPage';
 import UserDashboard from './pages/UserDashboard';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboard from './pages/AdminDashboard';
-import ReservationBanner from "./components/ReservationBanner";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -29,7 +28,6 @@ function AppRoutes() {
   return (
     <>
       <Navbar />
-      <ReservationBanner />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -46,13 +44,10 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <>
-      <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </BrowserRouter>
-      
-    </>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

@@ -51,6 +51,7 @@ export default function App() {
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
+        <ReservationBanner />
       </BrowserRouter>
       
     </>

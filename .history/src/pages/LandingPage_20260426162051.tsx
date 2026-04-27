@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -54,8 +54,6 @@ export default function LandingPage() {
   );
   const [loading, setLoading] = useState(true);
   const [modalPrize, setModalPrize] = useState<Prize | null>(null);
-  const reserveRef = useRef<HTMLDivElement>(null);
-  const [showHint, setShowHint] = useState(false);
 
   const fetchData = async () => {
     const { data: raffleData } = await supabase
@@ -163,20 +161,6 @@ export default function LandingPage() {
     await fetchUserReservation();
   }, [user, fetchUserReservation]);
 
-  useEffect(() => {
-    if (selectedTickets.length > 0 && reserveRef.current) {
-      reserveRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [selectedTickets]);
-
-  useEffect(() => {
-    if (selectedTickets.length > 0) {
-      setShowHint(true);
-      const timeout = setTimeout(() => setShowHint(false), 4000);
-      return () => clearTimeout(timeout);
-    }
-  }, [selectedTickets]);
-
   if (loading) {
     return (
       <div
@@ -237,7 +221,7 @@ export default function LandingPage() {
             </h1>
             <p className="text-gray-400 text-lg max-w-xl mx-auto mb-8">
               {raffle?.description ||
-                "Participa por las mejores marcas. Selecciona tus números favoritos y gana."}
+                "Participa por las mejores marcas. Selecciona tus numeros favoritos y gana."}
             </p>
           </motion.div>
           <div className="max-w-md mx-auto">
@@ -271,11 +255,11 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div>
               <h2 className="text-xl font-bold text-white">
-                Selecciona tus boletos
+                Selecciona tus Boletos
               </h2>
               <p className="text-gray-500 text-sm mt-1">
                 ${ticketPrice.toLocaleString()} MXN por boleto - Haz clic en los
-                números que deseas
+                numeros que deseas
               </p>
             </div>
             <div className="flex items-center gap-4 text-xs text-gray-400">
@@ -328,15 +312,8 @@ export default function LandingPage() {
 
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div
-              ref={reserveRef}
-              animate={selectedTickets.length > 0
-                ? { scale: [1, 1.05, 1] }
-                : { scale: 1 }
-              }
-              transition={selectedTickets.length > 0
-                ? { duration: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
-                : { duration: 0.2 }
-              }
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl"
               style={{ background: "#1a1a1a", border: `1px solid ${GOLD}30` }}
             >
@@ -407,11 +384,6 @@ export default function LandingPage() {
           </div>
         )}
       </Modal>
-      {showHint && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-6 py-3 rounded-xl shadow-lg z-50 font-semibold">
-          ¡Ahora haz clic en "Reservar boletos" para continuar!
-        </div>
-      )}
     </div>
   );
 }

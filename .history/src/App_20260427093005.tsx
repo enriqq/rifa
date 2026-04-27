@@ -29,7 +29,6 @@ function AppRoutes() {
   return (
     <>
       <Navbar />
-      <ReservationBanner />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -51,6 +50,7 @@ export default function App() {
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
+        <ReservationBanner />
       </BrowserRouter>
       
     </>

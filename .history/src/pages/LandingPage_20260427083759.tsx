@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -54,8 +54,6 @@ export default function LandingPage() {
   );
   const [loading, setLoading] = useState(true);
   const [modalPrize, setModalPrize] = useState<Prize | null>(null);
-  const reserveRef = useRef<HTMLDivElement>(null);
-  const [showHint, setShowHint] = useState(false);
 
   const fetchData = async () => {
     const { data: raffleData } = await supabase
@@ -162,20 +160,6 @@ export default function LandingPage() {
     await fetchData();
     await fetchUserReservation();
   }, [user, fetchUserReservation]);
-
-  useEffect(() => {
-    if (selectedTickets.length > 0 && reserveRef.current) {
-      reserveRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [selectedTickets]);
-
-  useEffect(() => {
-    if (selectedTickets.length > 0) {
-      setShowHint(true);
-      const timeout = setTimeout(() => setShowHint(false), 4000);
-      return () => clearTimeout(timeout);
-    }
-  }, [selectedTickets]);
 
   if (loading) {
     return (
@@ -328,15 +312,8 @@ export default function LandingPage() {
 
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div
-              ref={reserveRef}
-              animate={selectedTickets.length > 0
-                ? { scale: [1, 1.05, 1] }
-                : { scale: 1 }
-              }
-              transition={selectedTickets.length > 0
-                ? { duration: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
-                : { duration: 0.2 }
-              }
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl"
               style={{ background: "#1a1a1a", border: `1px solid ${GOLD}30` }}
             >
@@ -407,11 +384,6 @@ export default function LandingPage() {
           </div>
         )}
       </Modal>
-      {showHint && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-black px-6 py-3 rounded-xl shadow-lg z-50 font-semibold">
-          ¡Ahora haz clic en "Reservar boletos" para continuar!
-        </div>
-      )}
     </div>
   );
 }

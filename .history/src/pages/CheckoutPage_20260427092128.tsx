@@ -18,7 +18,6 @@ import { useAuth } from "../contexts/AuthContext";
 import ReservationTimer from "../components/ReservationTimer";
 import { BANK_DETAILS, WHATSAPP_NUMBER, GOLD } from "../lib/constants";
 import { playSuccess } from "../lib/audio";
-import { useCancelReservation } from "../hooks/useCancelReservation";
 
 interface ReservedTicket {
   id: string;
@@ -169,10 +168,25 @@ export default function CheckoutPage() {
     navigate("/");
   }, [user, navigate]);
 
-  const handleCancelReservation = useCancelReservation(user, () => {
-    setReservedTickets([]);
-    navigate("/");
-  });
+  const handleCancelReservation = async () => {
+    if (!user || reservedTickets.length === 0) return;
+    if (!window.confirm("¿Seguro que deseas cancelar tu reserva?")) return;
+    try {
+      const ticketIds = reservedTickets.map((t) => t.id);
+      await supabase
+        .from("tickets")
+        .update({
+          status: "available",
+          reserved_by: null,
+          reserved_at: null,
+          reservation_expires_at: null,
+        })
+        .in("id", ticketIds);
+      navigate("/");
+    } catch (err) {
+      setError("No se pudo cancelar la reserva. Intenta de nuevo.");
+    }
+  };
 
   if (loading) {
     return (

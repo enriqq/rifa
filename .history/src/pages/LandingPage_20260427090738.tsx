@@ -330,7 +330,7 @@ export default function LandingPage() {
             <motion.div
               ref={reserveRef}
               animate={selectedTickets.length > 0
-                ? { scale: [1, 1.05, 1] }
+                ? { scale: [1, 1.08, 1] }
                 : { scale: 1 }
               }
               transition={selectedTickets.length > 0

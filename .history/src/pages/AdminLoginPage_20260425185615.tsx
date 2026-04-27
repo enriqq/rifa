@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
       >
         <div className="text-center mb-8">
           <Shield size={48} className="mx-auto mb-4" style={{ color: GOLD }} />
-          <h1 className="text-2xl font-bold text-white">Portal de administración</h1>
+          <h1 className="text-2xl font-bold text-white">Portal de Administracion</h1>
           <p className="text-gray-500 text-sm mt-1">Acceso exclusivo para administradores</p>
         </div>
 

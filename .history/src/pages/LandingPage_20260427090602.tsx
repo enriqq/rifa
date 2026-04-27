@@ -329,14 +329,13 @@ export default function LandingPage() {
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div
               ref={reserveRef}
-              animate={selectedTickets.length > 0
-                ? { scale: [1, 1.05, 1] }
-                : { scale: 1 }
-              }
-              transition={selectedTickets.length > 0
-                ? { duration: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
-                : { duration: 0.2 }
-              }
+              initial={false}
+              animate={selectedTickets.length > 0 ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+              transition={{
+                duration: 0.6,
+                repeat: selectedTickets.length > 0 ? Infinity : 0,
+                repeatType: "loop",
+              }}
               className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl"
               style={{ background: "#1a1a1a", border: `1px solid ${GOLD}30` }}
             >

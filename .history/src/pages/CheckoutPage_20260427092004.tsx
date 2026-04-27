@@ -18,7 +18,6 @@ import { useAuth } from "../contexts/AuthContext";
 import ReservationTimer from "../components/ReservationTimer";
 import { BANK_DETAILS, WHATSAPP_NUMBER, GOLD } from "../lib/constants";
 import { playSuccess } from "../lib/audio";
-import { useCancelReservation } from "../hooks/useCancelReservation";
 
 interface ReservedTicket {
   id: string;
@@ -169,10 +168,36 @@ export default function CheckoutPage() {
     navigate("/");
   }, [user, navigate]);
 
-  const handleCancelReservation = useCancelReservation(user, () => {
-    setReservedTickets([]);
-    navigate("/");
-  });
+  const handleCancelReservation = async () => {
+    if (!user || reservedTickets.length === 0) return;
+    const result = await Swal.fire({
+      title: "¿Cancelar reserva?",
+      text: "¿Seguro que deseas cancelar tu reserva? Los boletos volverán a estar disponibles.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cancelar",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    });
+    if (!result.isConfirmed) return;
+    try {
+      const ticketIds = reservedTickets.map((t) => t.id);
+      await supabase
+        .from("tickets")
+        .update({
+          status: "available",
+          reserved_by: null,
+          reserved_at: null,
+          reservation_expires_at: null,
+        })
+        .in("id", ticketIds);
+      navigate("/");
+    } catch (err) {
+      setError("No se pudo cancelar la reserva. Intenta de nuevo.");
+    }
+  };
 
   if (loading) {
     return (
@@ -324,7 +349,7 @@ export default function CheckoutPage() {
                   className="space-y-3 p-4 rounded-xl"
                   style={{ background: "#1a1a1a" }}
                 >
-                  {[
+                  {([
                     ["Banco", BANK_DETAILS.bank],
                     ["Cuenta", BANK_DETAILS.accountNumber],
                     ["Titular", BANK_DETAILS.holderName],
@@ -337,8 +362,8 @@ export default function CheckoutPage() {
                         {value}
                       </span>
                     </div>
-                  ))}
-                </div>
+                  )))
+                }
                 <p className="text-gray-500 text-xs mt-3">
                   Transfiere o deposita el monto exacto y sube tu comprobante a
                   continuación.
