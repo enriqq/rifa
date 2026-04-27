@@ -1,6 +1,4 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
-//import { Resend } from "npm:resend";
-//const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
