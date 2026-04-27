@@ -13,16 +13,30 @@ export default async function handler(req, res) {
             service: "gmail",
             auth: {
                 user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASS
-            }
+                pass: process.env.MAIL_PASS,
+            },
         });
 
         try {
             await transporter.sendMail({
-                from: '"RifandoAndo" <' + process.env.MAIL_USER + '>',
+                from: '"RifandoAndo" <' + process.env.MAIL_USER + ">",
                 to: process.env.ADMIN_EMAIL,
-                subject: "¡Hay boletos pendientes de validar!",
-                html: `<p>Hay <b>${pendientes}</b> boletos pendientes de validación.</p>`
+                subject: "🔔 Boletos pendientes de validar",
+                html: `
+        <div style="background:#181818;padding:32px 24px;border-radius:12px;font-family:sans-serif;max-width:480px;margin:auto;">
+        <h2 style="color:#FFC107;margin-bottom:16px;">¡Tienes boletos pendientes de validación!</h2>
+        <p style="color:#fff;font-size:16px;margin-bottom:24px;">
+            Hay <b style="color:#FFC107;font-size:20px;">${pendientes}</b> boleto${pendientes > 1 ? "s" : ""} pendiente${pendientes > 1 ? "s" : ""} de validación en la plataforma.
+        </p>
+        <a href="https://rifa-zeta-opal.vercel.app/admin-portal" 
+            style="display:inline-block;padding:12px 28px;background:#FFC107;color:#181818;font-weight:bold;border-radius:8px;text-decoration:none;font-size:16px;">
+            Ir al panel de administración
+        </a>
+        <p style="color:#888;font-size:12px;margin-top:32px;">
+            Este es un aviso automático de RifandoAndo.
+        </p>
+        </div>
+    `,
             });
             return res.json({ success: true });
         } catch (err) {
@@ -33,23 +47,25 @@ export default async function handler(req, res) {
     // Caso 2: Correo personalizado (aprobado/rechazado)
     const { to, subject, html } = req.body;
     if (!to || !subject || !html) {
-        return res.status(400).json({ error: "Faltan campos para correo personalizado" });
+        return res
+            .status(400)
+            .json({ error: "Faltan campos para correo personalizado" });
     }
 
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
-        }
+            pass: process.env.MAIL_PASS,
+        },
     });
 
     try {
         await transporter.sendMail({
-            from: '"RifandoAndo" <' + process.env.MAIL_USER + '>',
+            from: '"RifandoAndo" <' + process.env.MAIL_USER + ">",
             to,
             subject,
-            html
+            html,
         });
         return res.json({ success: true });
     } catch (err) {
