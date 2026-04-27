@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Llama a la función edge de Supabase
         run: |
-          curl -X GET https://crvxzmsirxorkklsugyh.supabase.co/functions/v1/notify-admin
+          curl -X POST https://crvxzmsirxorkklsugyh.supabase.co/functions/v1/notify-admin
