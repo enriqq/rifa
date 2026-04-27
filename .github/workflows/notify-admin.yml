@@ -1,0 +1,14 @@
+name: Notificar tickets pendientes
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Cada 5 minutos (ajusta si quieres otra frecuencia)
+  workflow_dispatch:      # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llama a la función edge de Supabase
+        run: |
+          curl -X GET https://crvxzmsirxorkklsugyh.supabase.co/functions/v1/notify-admin
