@@ -70,8 +70,8 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, [profile?.is_admin, fetchPending]);
 
-  const handleAction = async (ticketIds: string[], action: 'approve' | 'reject') => {
-    setActionLoading(ticketIds.join(","));
+  const handleAction = async (ticketId: string, action: 'approve' | 'reject') => {
+    setActionLoading(ticketId);
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
@@ -81,39 +81,14 @@ export default function AdminDashboard() {
         Authorization: `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ticketIds, action }),
+      body: JSON.stringify({ ticketId, action }),
     });
 
-    setPendingTickets((prev) => prev.filter((t) => !ticketIds.includes(t.id)));
+    setPendingTickets((prev) => prev.filter((t) => t.id !== ticketId));
     setActionLoading(null);
   };
 
   if (!profile?.is_admin) return null;
-
-  // Agrupa los tickets por usuario
-const grouped = Object.values(
-  pendingTickets.reduce((acc, ticket) => {
-    const key = ticket.reserved_by;
-    if (!acc[key]) {
-      acc[key] = {
-        reserved_by: key,
-        profile: ticket.profiles,
-        tickets: [],
-        receipts: [],
-        raffle: ticket.raffles,
-      };
-    }
-    acc[key].tickets.push(ticket);
-    acc[key].receipts.push(...(ticket.receipts || []));
-    return acc;
-  }, {} as Record<string, {
-    reserved_by: string;
-    profile: PendingTicket["profiles"];
-    tickets: PendingTicket[];
-    receipts: PendingTicket["receipts"];
-    raffle: PendingTicket["raffles"];
-  }>)
-);
 
   return (
     <div className="min-h-screen pt-20 pb-20 px-4" style={{ background: '#101010' }}>
@@ -155,8 +130,8 @@ const grouped = Object.values(
         ) : (
           <div className="space-y-4">
             <AnimatePresence>
-              {grouped.map((group, i) => (
-                <motion.div key={group.reserved_by}
+              {pendingTickets.map((ticket, i) => (
+                <motion.div key={ticket.id}
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -100 }} transition={{ delay: i * 0.05 }}
                   className="rounded-2xl border border-gray-800 overflow-hidden"
@@ -165,26 +140,26 @@ const grouped = Object.values(
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                       <div className="space-y-3 flex-1">
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl font-bold text-white">
-                            {group.tickets.map(t => `#${t.ticket_number}`).join(", ")}
-                          </span>
+                          <span className="text-2xl font-bold text-white">#{ticket.ticket_number}</span>
                           <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
                             style={{ color: '#FF9800', background: '#FF980015' }}>Pendiente</span>
                         </div>
-                        <p className="text-gray-400 text-sm">{group.raffle?.name}</p>
+                        <p className="text-gray-400 text-sm">{ticket.raffles?.name}</p>
+
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <User size={14} />
-                          <span>{group.profile?.full_name || 'Sin nombre'}</span>
+                          <span>{ticket.profiles?.full_name || 'Sin nombre'}</span>
                           <span className="text-gray-700">|</span>
-                          <span>{group.profile?.email}</span>
+                          <span>{ticket.profiles?.email}</span>
                         </div>
-                        {group.receipts && group.receipts.length > 0 && (
+
+                        {ticket.receipts && ticket.receipts.length > 0 && (
                           <div className="mt-3">
                             <p className="text-gray-500 text-xs mb-2 flex items-center gap-1">
                               <FileText size={12} /> Comprobante subido:
                             </p>
                             <div className="flex flex-wrap gap-2">
-                              {group.receipts.map((receipt, ri) => (
+                              {ticket.receipts.map((receipt, ri) => (
                                 <button key={ri} onClick={() => setPreviewUrl(receipt.file_url)}
                                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
                                   style={{ background: '#1a1a1a', color: GOLD, border: '1px solid #333' }}>
@@ -196,19 +171,16 @@ const grouped = Object.values(
                           </div>
                         )}
                       </div>
+
                       <div className="flex sm:flex-col gap-2">
-                        <button
-                          onClick={() => handleAction(group.tickets.map(t => t.id), 'approve')}
-                          disabled={actionLoading === group.reserved_by}
+                        <button onClick={() => handleAction(ticket.id, 'approve')} disabled={actionLoading === ticket.id}
                           className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50"
                           style={{ background: '#2E7D32', color: '#fff' }}>
-                          <CheckCircle size={16} /> Aprobar todos
+                          <CheckCircle size={16} /> Aprobar
                         </button>
-                        <button
-                          onClick={() => handleAction(group.tickets.map(t => t.id), 'reject')}
-                          disabled={actionLoading === group.reserved_by}
+                        <button onClick={() => handleAction(ticket.id, 'reject')} disabled={actionLoading === ticket.id}
                           className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 border border-red-800/50 text-red-400 hover:bg-red-900/20">
-                          <XCircle size={16} /> Rechazar todos
+                          <XCircle size={16} /> Rechazar
                         </button>
                       </div>
                     </div>
@@ -239,3 +211,28 @@ const grouped = Object.values(
     </div>
   );
 }
+
+// Agrupa los tickets por usuario
+const grouped = Object.values(
+  pendingTickets.reduce((acc, ticket) => {
+    const key = ticket.reserved_by;
+    if (!acc[key]) {
+      acc[key] = {
+        reserved_by: key,
+        profile: ticket.profiles,
+        tickets: [],
+        receipts: [],
+        raffle: ticket.raffles,
+      };
+    }
+    acc[key].tickets.push(ticket);
+    acc[key].receipts.push(...(ticket.receipts || []));
+    return acc;
+  }, {} as Record<string, {
+    reserved_by: string;
+    profile: PendingTicket["profiles"];
+    tickets: PendingTicket[];
+    receipts: PendingTicket["receipts"];
+    raffle: PendingTicket["raffles"];
+  }>)
+);

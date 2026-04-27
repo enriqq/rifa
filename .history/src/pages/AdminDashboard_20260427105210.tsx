@@ -70,8 +70,8 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, [profile?.is_admin, fetchPending]);
 
-  const handleAction = async (ticketIds: string[], action: 'approve' | 'reject') => {
-    setActionLoading(ticketIds.join(","));
+  const handleAction = async (ticketId: string, action: 'approve' | 'reject') => {
+    setActionLoading(ticketId);
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
@@ -81,10 +81,10 @@ export default function AdminDashboard() {
         Authorization: `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ticketIds, action }),
+      body: JSON.stringify({ ticketId, action }),
     });
 
-    setPendingTickets((prev) => prev.filter((t) => !ticketIds.includes(t.id)));
+    setPendingTickets((prev) => prev.filter((t) => t.id !== ticketId));
     setActionLoading(null);
   };
 
