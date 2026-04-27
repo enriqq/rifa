@@ -81,35 +81,32 @@ Deno.serve(async (req: Request) => {
       // Busca el email del usuario
       const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
 
-      // Envía el correo llamando a tu endpoint de Vercel
-      await fetch("https://rifa-zeta-opal.vercel.app/api/notify-admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: userData?.user?.email,
-          subject: "¡Tu boleto ha sido aprobado!",
-          html: `
-            <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
-              <h2 style="color: #FFD700; text-align: center; margin-bottom: 16px;">🎉 ¡Felicidades!</h2>
-              <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
-                Tu comprobante fue <b>validado</b> y tu boleto ya está <b>confirmado</b>.
-              </p>
-              <div style="background: #222; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
-                <span style="font-size: 22px; color: #FFD700;">✔️</span>
-                <p style="margin: 8px 0 0 0; color: #FFD700;">¡Ya participas en el sorteo!</p>
-              </div>
-              <p style="font-size: 15px; color: #bbb; text-align: center;">
-                Puedes ver tus boletos y el estado de tu participación en tu panel de usuario.
-              </p>
-              <div style="text-align: center; margin-top: 32px;">
-                <a href="https://rifa-zeta-opal.vercel.app/dashboard" style="background: #FFD700; color: #101010; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Ver mis boletos</a>
-              </div>
-              <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
-                Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
-              </p>
-            </div>
-          `
-        })
+      // Envía el correo
+      await resend.emails.send({
+        from: "RifandoAndo <onboarding@resend.dev>",
+        to: userData?.user?.email,
+        subject: "¡Tu boleto ha sido aprobado!",
+        html: `
+  <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
+    <h2 style="color: #FFD700; text-align: center; margin-bottom: 16px;">🎉 ¡Felicidades!</h2>
+    <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
+      Tu comprobante fue <b>validado</b> y tu boleto ya está <b>confirmado</b>.
+    </p>
+    <div style="background: #222; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
+      <span style="font-size: 22px; color: #FFD700;">✔️</span>
+      <p style="margin: 8px 0 0 0; color: #FFD700;">¡Ya participas en el sorteo!</p>
+    </div>
+    <p style="font-size: 15px; color: #bbb; text-align: center;">
+      Puedes ver tus boletos y el estado de tu participación en tu panel de usuario.
+    </p>
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="https://rifa-zeta-opal.vercel.app/dashboard" style="background: #FFD700; color: #101010; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Ver mis boletos</a>
+    </div>
+    <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
+      Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
+    </p>
+  </div>
+  `
       });
 
       if (error) throw error;
