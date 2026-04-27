@@ -135,55 +135,53 @@ Deno.serve(async (req: Request) => {
       const { data: userData } = await adminClient.auth.admin.getUserById(ticket?.reserved_by);
 
       // Envía el correo
-      await fetch("https://rifa-zeta-opal.vercel.app/api/notify-admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: userData?.user?.email,
-          subject: "Tu comprobante fue rechazado",
-          html: `
-      <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
-        <h2 style="color: #FF5252; text-align: center; margin-bottom: 16px;">❌ Comprobante rechazado</h2>
-        <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
-          Lamentablemente, tu comprobante <b>no pudo ser validado</b>.
-        </p>
-        <div style="background: #222; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
-          <span style="font-size: 22px; color: #FF5252;">⚠️</span>
-          <p style="margin: 8px 0 0 0; color: #FF5252;">Por favor, revisa los datos y vuelve a intentarlo.</p>
-        </div>
-        <p style="font-size: 15px; color: #bbb; text-align: center;">
-          Si tienes dudas sobre el motivo del rechazo, contáctanos para más información.
-        </p>
-        <div style="text-align: center; margin-top: 32px;">
-          <a href="https://rifa-zeta-opal.vercel.app/checkout" style="background: #FF5252; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Subir nuevo comprobante</a>
-        </div>
-        <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
-          Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
-        </p>
-      </div>
-    `})
-        });
-
-        if(error) throw error;
-
-        await adminClient
-          .from("receipts")
-          .delete()
-          .eq("ticket_id", ticketId);
-      } else {
-        return new Response(JSON.stringify({ error: "Invalid action" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-    return new Response(JSON.stringify({ success: true }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      await resend.emails.send({
+        from: "RifandoAndo <onboarding@resend.dev>",
+        to: userData?.user?.email,
+        subject: "Tu comprobante fue rechazado",
+        html: `
+  <div style="font-family: Arial, sans-serif; background: #101010; color: #fff; padding: 32px; border-radius: 16px; max-width: 480px; margin: 0 auto;">
+    <h2 style="color: #FF5252; text-align: center; margin-bottom: 16px;">❌ Comprobante rechazado</h2>
+    <p style="font-size: 18px; text-align: center; margin-bottom: 24px;">
+      Lamentablemente, tu comprobante <b>no pudo ser validado</b>.
+    </p>
+    <div style="background: #222; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
+      <span style="font-size: 22px; color: #FF5252;">⚠️</span>
+      <p style="margin: 8px 0 0 0; color: #FF5252;">Por favor, revisa los datos y vuelve a intentarlo.</p>
+    </div>
+    <p style="font-size: 15px; color: #bbb; text-align: center;">
+      Si tienes dudas sobre el motivo del rechazo, contáctanos para más información.
+    </p>
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="https://rifa-zeta-opal.vercel.app/checkout" style="background: #FF5252; color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Subir nuevo comprobante</a>
+    </div>
+    <p style="font-size: 12px; color: #666; margin-top: 32px; text-align: center;">
+      Si tienes dudas, responde a este correo o contáctanos por WhatsApp.
+    </p>
+  </div>
+  `
       });
-    } catch (err) {
-      return new Response(JSON.stringify({ error: err.message }), {
-        status: 500,
+
+      if (error) throw error;
+
+      await adminClient
+        .from("receipts")
+        .delete()
+        .eq("ticket_id", ticketId);
+    } else {
+      return new Response(JSON.stringify({ error: "Invalid action" }), {
+        status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-  });
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
