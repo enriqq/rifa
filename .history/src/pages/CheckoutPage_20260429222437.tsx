@@ -57,10 +57,6 @@ export default function CheckoutPage() {
     fetchReserved();
   }, [fetchReserved]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
-
   const earliestExpiry =
     reservedTickets.length > 0
       ? reservedTickets.reduce(
@@ -234,6 +230,7 @@ export default function CheckoutPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
+          <input type="hidden"></input>
           <h1 className="text-3xl font-bold text-white mb-2">Resumen</h1>
           <p className="text-gray-500 mb-8">
             Completa tu pago para confirmar tus boletos

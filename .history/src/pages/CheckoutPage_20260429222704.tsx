@@ -54,12 +54,9 @@ export default function CheckoutPage() {
   }, [user]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
     fetchReserved();
   }, [fetchReserved]);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
 
   const earliestExpiry =
     reservedTickets.length > 0
@@ -327,7 +324,7 @@ export default function CheckoutPage() {
                   className="space-y-3 p-4 rounded-xl"
                   style={{ background: "#1a1a1a" }}
                 >
-                  {[
+                  {([
                     ["Banco", BANK_DETAILS.bank],
                     ["Cuenta", BANK_DETAILS.accountNumber],
                     ["Titular", BANK_DETAILS.holderName],
@@ -340,8 +337,8 @@ export default function CheckoutPage() {
                         {value}
                       </span>
                     </div>
-                  ))}
-                </div>
+                  )))
+                }
                 <p className="text-gray-500 text-xs mt-3">
                   Transfiere o deposita el monto exacto y sube tu comprobante a
                   continuación.

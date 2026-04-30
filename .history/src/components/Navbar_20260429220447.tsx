@@ -16,10 +16,9 @@ export default function Navbar() {
     ...(profile?.is_admin ? [{ to: '/admin-portal', label: 'Admin' }] : []),
   ];
 
-  /*
-    console.log("user", user);
-    console.log("profile", profile);
-  */
+  /*console.log("user", user);
+  console.log("profile", profile);
+*/
   return (
     <nav
       className="sticky top-0 z-40 border-b border-gray-800"

@@ -104,7 +104,7 @@ export default function UserDashboard() {
             {tickets.some((t) => t.status === 'reserved') && (
               <div className="text-center">
                 <button onClick={() => navigate('/checkout')} className="px-6 py-3 rounded-xl font-semibold text-sm"
-                  style={{ background: '#2E7D32', color: '#fff' }}>Completar pago</button>
+                  style={{ background: '#2E7D32', color: '#fff' }}>Completar Pago</button>
               </div>
             )}
           </div>

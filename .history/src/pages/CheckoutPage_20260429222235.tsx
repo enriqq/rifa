@@ -57,10 +57,6 @@ export default function CheckoutPage() {
     fetchReserved();
   }, [fetchReserved]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
-
   const earliestExpiry =
     reservedTickets.length > 0
       ? reservedTickets.reduce(
@@ -362,7 +358,7 @@ export default function CheckoutPage() {
                   }}
                   onDragLeave={() => setDragOver(false)}
                   onDrop={handleDrop}
-                  className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${dragOver ? "border-yellow-500 bg-yellow-500/5" : "border-gray-700 hover:border-gray-600"}`}
+                  className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${dragOver ? "border-yellow-500 bg-yellow-500/5" : "border-gray-700 hover:border-gray-600"}`}
                   onClick={() => document.getElementById("file-input")?.click()}
                 >
                   <input
@@ -405,11 +401,19 @@ export default function CheckoutPage() {
                     <div className="space-y-2">
                       <ImageIcon size={40} className="mx-auto text-gray-600" />
                       <p className="text-gray-400 text-sm">
-                        Arrastra tu comprobante aqui o haz clic para seleccionar
+                        Arrastra tu comprobante aquí o usa el botón para seleccionar
                       </p>
                       <p className="text-gray-600 text-xs">
                         JPG, PNG, WebP o PDF (max 10MB)
                       </p>
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById("file-input")?.click()}
+                        className="mt-2 px-4 py-2 rounded-lg font-semibold text-sm"
+                        style={{ background: GOLD, color: "#101010" }}
+                      >
+                        Seleccionar archivo
+                      </button>
                     </div>
                   )}
                 </div>

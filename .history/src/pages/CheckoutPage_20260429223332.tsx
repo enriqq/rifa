@@ -463,6 +463,26 @@ export default function CheckoutPage() {
                   </p>
                 )}
               </div>
+
+              <div
+                className="rounded-2xl border border-gray-800 p-6"
+                style={{ background: "#141414" }}
+              >
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <CreditCard size={18} style={{ color: GOLD }} /> Pagar con
+                  Mercado Pago
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Paga con Mercado Pago para confirmar tus boletos.
+                </p>
+                <button
+                  onClick={}
+                  className="w-full mt-4 py-3 rounded-xl font-semibold text-sm"
+                  style={{ background: '#009ee3', color: '#fff' }}
+                >
+                  Pagar con Mercado Pago
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

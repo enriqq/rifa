@@ -57,10 +57,6 @@ export default function CheckoutPage() {
     fetchReserved();
   }, [fetchReserved]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
-
   const earliestExpiry =
     reservedTickets.length > 0
       ? reservedTickets.reduce(

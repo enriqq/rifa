@@ -56,7 +56,7 @@ Deno.serve(async (req: Request) => {
       throw ticketsError;
     }
 
-    // console.log("Tickets encontrados:", tickets);
+    console.log("Tickets encontrados:", tickets);
 
     const enriched = await Promise.all(
       (tickets || []).map(async (t: any) => {
