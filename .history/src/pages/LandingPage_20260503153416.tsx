@@ -10,7 +10,6 @@ import TicketGrid from "../components/TicketGrid";
 import ReservationTimer from "../components/ReservationTimer";
 import { GOLD } from "../lib/constants";
 import Modal from "../components/Modal";
-import Countdown from "../components/Countdown";
 
 interface Prize {
   id: string;
@@ -43,7 +42,6 @@ function stripHtml(html: string) {
 }
 
 export default function LandingPage() {
-  const raffleEnd = "2026-05-09T00:00:00";
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [raffle, setRaffle] = useState<Raffle | null>(null);
@@ -167,10 +165,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (selectedTickets.length > 0 && reserveRef.current) {
-      reserveRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      reserveRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [selectedTickets]);
 
@@ -234,9 +229,7 @@ export default function LandingPage() {
               }}
             >
               <Sparkles size={14} /> Rifa en vivo
-              
             </div>
-            <Countdown endTime={raffleEnd} />
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
               {raffle?.name || "Rifa de Licores"}
               <br />
@@ -336,20 +329,13 @@ export default function LandingPage() {
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div
               ref={reserveRef}
-              animate={
-                selectedTickets.length > 0
-                  ? { scale: [1, 1.05, 1] }
-                  : { scale: 1 }
+              animate={selectedTickets.length > 0
+                ? { scale: [1, 1.05, 1] }
+                : { scale: 1 }
               }
-              transition={
-                selectedTickets.length > 0
-                  ? {
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      ease: "easeInOut",
-                    }
-                  : { duration: 0.2 }
+              transition={selectedTickets.length > 0
+                ? { duration: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
+                : { duration: 0.2 }
               }
               className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl"
               style={{ background: "#1a1a1a", border: `1px solid ${GOLD}30` }}

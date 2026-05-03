@@ -10,7 +10,6 @@ import TicketGrid from "../components/TicketGrid";
 import ReservationTimer from "../components/ReservationTimer";
 import { GOLD } from "../lib/constants";
 import Modal from "../components/Modal";
-import Countdown from "../components/Countdown";
 
 interface Prize {
   id: string;
@@ -43,7 +42,6 @@ function stripHtml(html: string) {
 }
 
 export default function LandingPage() {
-  const raffleEnd = "2026-05-09T00:00:00";
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [raffle, setRaffle] = useState<Raffle | null>(null);
@@ -167,10 +165,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (selectedTickets.length > 0 && reserveRef.current) {
-      reserveRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      reserveRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [selectedTickets]);
 
@@ -234,9 +229,7 @@ export default function LandingPage() {
               }}
             >
               <Sparkles size={14} /> Rifa en vivo
-              
             </div>
-            <Countdown endTime={raffleEnd} />
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
               {raffle?.name || "Rifa de Licores"}
               <br />
@@ -336,20 +329,13 @@ export default function LandingPage() {
           {!profile?.is_admin && selectedTickets.length > 0 && (
             <motion.div
               ref={reserveRef}
-              animate={
-                selectedTickets.length > 0
-                  ? { scale: [1, 1.05, 1] }
-                  : { scale: 1 }
+              animate={selectedTickets.length > 0
+                ? { scale: [1, 1.05, 1] }
+                : { scale: 1 }
               }
-              transition={
-                selectedTickets.length > 0
-                  ? {
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      ease: "easeInOut",
-                    }
-                  : { duration: 0.2 }
+              transition={selectedTickets.length > 0
+                ? { duration: 0.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }
+                : { duration: 0.2 }
               }
               className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl"
               style={{ background: "#1a1a1a", border: `1px solid ${GOLD}30` }}
@@ -426,6 +412,34 @@ export default function LandingPage() {
           ¡Ahora haz clic en "Reservar boletos" para continuar!
         </div>
       )}
+    </div>
+  );
+}
+
+function Countdown({ endTime }: { endTime: string }) {
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+
+  function getTimeLeft() {
+    const diff = new Date(endTime).getTime() - Date.now();
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    return { days, hours, minutes, seconds };
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
+    return () => clearInterval(timer);
+  }, [endTime]);
+
+  return (
+    <div className="flex justify-center gap-4 text-2xl font-bold text-yellow-400 mb-4">
+      <span>{timeLeft.days}d</span>
+      <span>{timeLeft.hours}h</span>
+      <span>{timeLeft.minutes}m</span>
+      <span>{timeLeft.seconds}s</span>
     </div>
   );
 }

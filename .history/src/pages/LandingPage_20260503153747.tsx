@@ -236,7 +236,6 @@ export default function LandingPage() {
               <Sparkles size={14} /> Rifa en vivo
               
             </div>
-            <Countdown endTime={raffleEnd} />
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
               {raffle?.name || "Rifa de Licores"}
               <br />
