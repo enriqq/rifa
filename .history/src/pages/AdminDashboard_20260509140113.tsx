@@ -178,20 +178,14 @@ export default function AdminDashboard() {
 
     if (uniqueUserIds.length === 0) return [];
 
-    const testUserId = "d99e9530-2ae8-4d83-8ba4-53e672cf5b9a";
-
     // 3. Trae los perfiles de esos usuarios
     const { data: profiles } = await supabase
       .from("profiles")
       .select("id, email, full_name")
-      .in("id", [testUserId]);
+      .in("id", uniqueUserIds);
 
     return profiles || [];
   }, []);
-
-  useEffect(() => {
-    fetchUsersWithTickets().then(setUsers);
-  }, [fetchUsersWithTickets]);
 
   if (!profile?.is_admin) return null;
 

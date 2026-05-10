@@ -178,7 +178,7 @@ export default function AdminDashboard() {
 
     if (uniqueUserIds.length === 0) return [];
 
-    const testUserId = "d99e9530-2ae8-4d83-8ba4-53e672cf5b9a";
+    const testUserId = "d3c4f1f8-e3d3-4454-b9a0-f99e7e018ceb";
 
     // 3. Trae los perfiles de esos usuarios
     const { data: profiles } = await supabase

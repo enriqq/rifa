@@ -48,9 +48,7 @@ export default function AdminDashboard() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [soldTickets, setSoldTickets] = useState<SoldTicket[]>([]);
   const [soldLoading, setSoldLoading] = useState(true);
-  const [users, setUsers] = useState<{ email: string; full_name: string }[]>(
-    [],
-  );
+  const [users, setUsers] = useState<{ email: string; full_name: string }[]>([]);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
@@ -68,9 +66,7 @@ export default function AdminDashboard() {
   }, [user, profile, navigate]);
 
   const fetchPending = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
     try {
@@ -104,11 +100,12 @@ export default function AdminDashboard() {
   }, [profile?.is_admin, fetchPending]);
 
   const handleAction = useCallback(
-    async (ticketIds: string[], action: "approve" | "reject") => {
+    async (
+      ticketIds: string[],
+      action: "approve" | "reject",
+    ) => {
       setActionLoading(ticketIds.join(","));
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
       await fetch(`${FUNCTION_URL}/admin-action`, {
@@ -120,9 +117,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({ ticketIds, action }),
       });
 
-      setPendingTickets((prev) =>
-        prev.filter((t) => !ticketIds.includes(t.id)),
-      );
+      setPendingTickets((prev) => prev.filter((t) => !ticketIds.includes(t.id)));
       setActionLoading(null);
     },
     [],
@@ -132,12 +127,10 @@ export default function AdminDashboard() {
     setSoldLoading(true);
     const { data, error } = await supabase
       .from("tickets")
-      .select(
-        `
+      .select(`
         id, ticket_number, purchased_at, purchased_by,
         profiles(full_name, email)
-      `,
-      )
+      `)
       .eq("status", "sold");
     // console.log("sold data", data, "error", error);
     setSoldTickets(
@@ -162,36 +155,24 @@ export default function AdminDashboard() {
   }, [profile?.is_admin, fetchSold]);
 
   const fetchUsersWithTickets = useCallback(async () => {
-    // 1. Trae todos los tickets pendientes y vendidos
-    const { data: tickets, error } = await supabase
+    const { data, error } = await supabase
       .from("tickets")
-      .select("reserved_by, purchased_by, status")
+      .select("purchased_by, reserved_by, status, profiles(email, full_name)")
       .in("status", ["pending", "sold"]);
-    if (error || !tickets) return [];
-
-    // 2. Junta todos los userIds únicos
-    const userIds = [
-      ...tickets.map(t => t.reserved_by).filter(Boolean),
-      ...tickets.map(t => t.purchased_by).filter(Boolean),
-    ];
-    const uniqueUserIds = Array.from(new Set(userIds));
-
-    if (uniqueUserIds.length === 0) return [];
-
-    const testUserId = "d99e9530-2ae8-4d83-8ba4-53e672cf5b9a";
-
-    // 3. Trae los perfiles de esos usuarios
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, email, full_name")
-      .in("id", [testUserId]);
-
-    return profiles || [];
+    if (error) return [];
+    // Agrupa por usuario y filtra duplicados
+    const usersMap = new Map();
+    (data || []).forEach(ticket => {
+      const key = ticket.purchased_by || ticket.reserved_by;
+      if (key && ticket.profiles?.email) {
+        usersMap.set(key, {
+          email: ticket.profiles.email,
+          full_name: ticket.profiles.full_name,
+        });
+      }
+    });
+    return Array.from(usersMap.values());
   }, []);
-
-  useEffect(() => {
-    fetchUsersWithTickets().then(setUsers);
-  }, [fetchUsersWithTickets]);
 
   if (!profile?.is_admin) return null;
 
@@ -445,41 +426,6 @@ export default function AdminDashboard() {
             </AnimatePresence>
           </div>
         )}
-        <div
-          className="rounded-2xl border border-gray-800 p-6 mb-8"
-          style={{ background: "#181818" }}
-        >
-          <h2 className="text-xl font-bold text-white mb-4">
-            Enviar correo a usuarios con boletos pendientes o vendidos
-          </h2>
-          <div className="mb-2 text-gray-400 text-sm">
-            Usuarios a notificar: <b>{users.length}</b>
-          </div>
-          <input
-            className="w-full mb-2 p-2 rounded bg-gray-900 text-white border border-gray-700"
-            placeholder="Asunto"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          />
-          <textarea
-            className="w-full mb-2 p-2 rounded bg-gray-900 text-white border border-gray-700"
-            placeholder="Mensaje"
-            rows={4}
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-          />
-          <button
-            onClick={handleSendEmails}
-            disabled={sending || !subject || !body}
-            className="px-6 py-2 rounded-xl font-semibold text-sm"
-            style={{ background: "#FFC107", color: "#181818" }}
-          >
-            {sending ? "Enviando..." : "Enviar correos"}
-          </button>
-          {sent && (
-            <div className="text-green-400 mt-2">¡Correos enviados!</div>
-          )}
-        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -511,25 +457,14 @@ export default function AdminDashboard() {
                         <div className="space-y-3 flex-1">
                           <div className="flex items-center gap-3">
                             <span className="text-2xl font-bold text-white">
-                              {group.tickets
-                                .map((t) => `#${t.ticket_number}`)
-                                .join(", ")}
+                              {group.tickets.map(t => `#${t.ticket_number}`).join(", ")}
                             </span>
-                            <span
-                              className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                              style={{
-                                color: "#2E7D32",
-                                background: "#2E7D3215",
-                              }}
-                            >
-                              Vendido
-                            </span>
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                              style={{ color: '#2E7D32', background: '#2E7D3215' }}>Vendido</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-500">
                             <User size={14} />
-                            <span>
-                              {group.profile?.full_name || "Sin nombre"}
-                            </span>
+                            <span>{group.profile?.full_name || 'Sin nombre'}</span>
                             <span className="text-gray-700">|</span>
                             <span>{group.profile?.email}</span>
                           </div>
@@ -538,15 +473,14 @@ export default function AdminDashboard() {
                           <span className="text-sm text-gray-400">
                             Última compra:{" "}
                             {group.tickets
-                              .map((t) => t.purchased_at)
+                              .map(t => t.purchased_at)
                               .sort()
                               .reverse()[0]
                               ?.replace("T", " ")
                               .slice(0, 16) || "-"}
                           </span>
                           <span className="text-sm text-gray-400">
-                            Total: <b>{group.tickets.length}</b> boleto
-                            {group.tickets.length !== 1 ? "s" : ""}
+                            Total: <b>{group.tickets.length}</b> boleto{group.tickets.length !== 1 ? "s" : ""}
                           </span>
                         </div>
                       </div>

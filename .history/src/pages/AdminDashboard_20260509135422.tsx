@@ -162,36 +162,24 @@ export default function AdminDashboard() {
   }, [profile?.is_admin, fetchSold]);
 
   const fetchUsersWithTickets = useCallback(async () => {
-    // 1. Trae todos los tickets pendientes y vendidos
-    const { data: tickets, error } = await supabase
+    const { data, error } = await supabase
       .from("tickets")
-      .select("reserved_by, purchased_by, status")
+      .select("purchased_by, reserved_by, status, profiles(email, full_name)")
       .in("status", ["pending", "sold"]);
-    if (error || !tickets) return [];
-
-    // 2. Junta todos los userIds únicos
-    const userIds = [
-      ...tickets.map(t => t.reserved_by).filter(Boolean),
-      ...tickets.map(t => t.purchased_by).filter(Boolean),
-    ];
-    const uniqueUserIds = Array.from(new Set(userIds));
-
-    if (uniqueUserIds.length === 0) return [];
-
-    const testUserId = "d99e9530-2ae8-4d83-8ba4-53e672cf5b9a";
-
-    // 3. Trae los perfiles de esos usuarios
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, email, full_name")
-      .in("id", [testUserId]);
-
-    return profiles || [];
+    if (error) return [];
+    // Agrupa por usuario y filtra duplicados
+    const usersMap = new Map();
+    (data || []).forEach((ticket) => {
+      const key = ticket.purchased_by || ticket.reserved_by;
+      if (key && ticket.profiles?.email) {
+        usersMap.set(key, {
+          email: ticket.profiles.email,
+          full_name: ticket.profiles.full_name,
+        });
+      }
+    });
+    return Array.from(usersMap.values());
   }, []);
-
-  useEffect(() => {
-    fetchUsersWithTickets().then(setUsers);
-  }, [fetchUsersWithTickets]);
 
   if (!profile?.is_admin) return null;
 
