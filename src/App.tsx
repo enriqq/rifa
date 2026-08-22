@@ -32,7 +32,7 @@ function AppRoutes() {
       <Navbar />
       <ReservationBanner />
       <Routes>
-        <Route path="/" element={<Navigate to="/ganadores" />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
