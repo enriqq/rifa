@@ -43,7 +43,7 @@ function stripHtml(html: string) {
 }
 
 export default function LandingPage() {
-  const raffleEnd = "2026-05-09T00:00:00";
+  const raffleEnd = "2026-08-22T15:30:00";
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [raffle, setRaffle] = useState<Raffle | null>(null);
